@@ -269,5 +269,92 @@
                 return result;
             }
         }
+
+
+        private List<FileSystemInfo> Closure()
+        {
+            var cwd = Directory.GetCurrentDirectory();
+            DirectoryInfo di = new DirectoryInfo(cwd);
+            if (!di.Exists)
+                throw new Exception("directory or file does not exist.");
+            var p = System.IO.Path.GetFullPath(di.FullName);
+            return Closure(p);
+        }
+
+        private List<FileSystemInfo> Closure(string expr)
+        {
+            var result = new List<FileSystemInfo>();
+            var stack = new Stack<FileSystemInfo>();
+            try
+            {
+                FileInfo f2 = new FileInfo(expr);
+                stack.Push(f2);
+            }
+            catch { }
+            try
+            {
+                DirectoryInfo d2 = new DirectoryInfo(expr);
+                stack.Push(d2);
+            }
+            catch { }
+            while (stack.Any())
+            {
+                var fsi = stack.Pop();
+                result.Add(fsi);
+                if (fsi is FileInfo fi)
+                {
+                }
+                else if (fsi is DirectoryInfo di)
+                {
+                    foreach (var i in di.GetDirectories())
+                    {
+                        stack.Push(i);
+                    }
+                    foreach (var i in di.GetFiles())
+                    {
+                        stack.Push(i);
+                    }
+                }
+            }
+            return result;
+        }
+
+        // Whole new Regex pattern matching of files and directories.
+        public List<FileSystemInfo> RegexContents(string expr)
+        {
+            var result = new List<FileSystemInfo>();
+            if (expr == null)
+                throw new Exception("Regex expression cannot be null.");
+            var closure = Closure();
+            var cwd = Directory.GetCurrentDirectory().Replace('\\', '/');
+            foreach (var i in closure)
+            {
+                var regex = new PathRegex(expr);
+                if (regex.IsMatch(cwd, i))
+                    result.Add(i);
+            }
+            return result;
+        }
+    }
+
+    class PathRegex
+    {
+        string expr;
+        Regex re;
+
+        public PathRegex(string e)
+        {
+            expr = e;
+            re = new Regex(expr);
+        }
+
+        public bool IsMatch(string prefix, FileSystemInfo fsi)
+        {
+            var fp = fsi.FullName.Replace('\\', '/');
+            var rp = fp.StartsWith(prefix)
+                    ? fp.Substring(prefix.Length)
+                    : fp;
+            return re.IsMatch(rp);
+        }
     }
 }
