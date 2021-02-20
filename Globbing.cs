@@ -326,7 +326,7 @@
             if (expr == null)
                 throw new Exception("Regex expression cannot be null.");
             var closure = Closure();
-            var cwd = Directory.GetCurrentDirectory().Replace('\\', '/');
+            var cwd = Directory.GetCurrentDirectory().Replace('\\', '/') + "/";
             foreach (var i in closure)
             {
                 var regex = new PathRegex(expr);
