@@ -10,6 +10,17 @@
     public class Glob
     {
         private static readonly HashSet<char> RegexSpecialChars = new HashSet<char>(new[] { '[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')' });
+        private string current_directory;
+
+        public Glob()
+        {
+            current_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+        }
+
+        public Glob(string dir)
+        {
+            current_directory = dir;
+        }
 
         private static string GlobToRegex(string glob)
         {
@@ -136,7 +147,7 @@
                 }
                 else
                 {
-                    var root = Directory.GetCurrentDirectory();
+                    var root = current_directory;
                     var rest = expr;
                     return GetDirectory(root, rest);
                 }
@@ -223,7 +234,7 @@
             if (expr == null)
             {
                 var result = new List<FileSystemInfo>();
-                var cwd = Directory.GetCurrentDirectory();
+                var cwd = current_directory;
                 DirectoryInfo di = new DirectoryInfo(cwd);
                 if (!di.Exists)
                     throw new Exception("directory or file does not exist.");
@@ -248,7 +259,7 @@
             }
             else
             {
-                var root = Directory.GetCurrentDirectory();
+                var root = current_directory;
                 var rest = expr;
                 return Contents(root, rest);
             }
@@ -270,10 +281,9 @@
             }
         }
 
-
         private List<FileSystemInfo> Closure()
         {
-            var cwd = Directory.GetCurrentDirectory();
+            var cwd = current_directory;
             DirectoryInfo di = new DirectoryInfo(cwd);
             if (!di.Exists)
                 throw new Exception("directory or file does not exist.");
@@ -326,7 +336,7 @@
             if (expr == null)
                 throw new Exception("Regex expression cannot be null.");
             var closure = Closure();
-            var cwd = Directory.GetCurrentDirectory().Replace('\\', '/') + "/";
+            var cwd = current_directory.Replace('\\', '/') + "/";
             foreach (var i in closure)
             {
                 var regex = new PathRegex(expr);
