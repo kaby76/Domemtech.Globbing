@@ -5,8 +5,8 @@
     <RootNamespace>Domemtech.Globbing</RootNamespace>
     <AssemblyName>Domemtech.Globbing</AssemblyName>
 
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
 
     <Description>A file system globbing package for C#.</Description>
     <Copyright>Ken Domino</Copyright>
@@ -33,7 +33,7 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>globbing</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.2</Version>
+    <Version>2.3</Version>
     <Authors>Ken Domino</Authors>
   </PropertyGroup>
 </Project>

@@ -14,7 +14,7 @@
 
         public Glob()
         {
-            current_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            current_directory = Environment.CurrentDirectory.Replace('\\', '/');
         }
 
         public Glob(string dir)
